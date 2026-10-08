@@ -1,0 +1,217 @@
+:root{
+  --ink:#07050b;
+  --plum:#1b1030;
+  --violet:#6b3fa0;
+  --gold:#d9b46a;
+  --crimson:#a3122b;
+  --bone:#efe6d8;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:radial-gradient(120% 90% at 50% 0%,var(--plum) 0%,var(--ink) 65%);
+  color:var(--bone);
+  font-family:'Jost',system-ui,sans-serif;
+  font-weight:300;
+  overflow-x:hidden;
+}
+.hidden{display:none!important}
+#embers{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+  box-shadow:inset 0 0 160px 40px rgba(0,0,0,.75)}
+
+h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:400}
+
+/* Buttons */
+.btn{
+  font:500 1rem 'Jost',sans-serif;letter-spacing:.04em;
+  color:var(--bone);background:transparent;
+  border:1px solid var(--gold);border-radius:999px;
+  padding:.85rem 2rem;cursor:pointer;
+  transition:background .3s,color .3s,box-shadow .3s;
+}
+.btn:hover,.btn:focus-visible{background:var(--gold);color:var(--ink);box-shadow:0 0 30px rgba(217,180,106,.45);outline:none}
+.btn.small{padding:.5rem 1.4rem;font-size:.9rem}
+
+/* Intro */
+.intro{
+  position:relative;z-index:2;min-height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:2rem;gap:1.2rem;
+}
+.intro-small{color:var(--gold);letter-spacing:.3em;font-size:.85rem}
+.intro h1{
+  font-size:clamp(3rem,14vw,7rem);font-style:italic;line-height:1;
+  text-shadow:0 0 40px rgba(163,18,43,.55);
+  animation:breathe 5s ease-in-out infinite;
+}
+.intro-sub{opacity:.75;max-width:30ch;line-height:1.6}
+@keyframes breathe{50%{text-shadow:0 0 70px rgba(107,63,160,.8)}}
+
+/* Deck */
+.deck{position:relative;z-index:2;padding:calc(1.5rem + var(--safe-t)) 1.2rem calc(3rem + var(--safe-b));max-width:980px;margin:0 auto}
+.deck-head{text-align:center;margin-bottom:1.6rem}
+.deck-head h2{font-size:clamp(2rem,7vw,3rem);font-style:italic}
+.deck-head p{color:var(--gold);margin-top:.3rem;font-size:.95rem}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+@media(min-width:640px){.grid{grid-template-columns:repeat(3,1fr);gap:1.4rem}}
+
+/* Card flip */
+.card{
+  position:relative;aspect-ratio:3/4.4;perspective:900px;cursor:pointer;
+  background:none;border:none;color:inherit;font:inherit;
+}
+.card-inner{
+  position:absolute;inset:0;transform-style:preserve-3d;
+  transition:transform .8s cubic-bezier(.2,.7,.2,1);
+}
+.card.flipped .card-inner{transform:rotateY(180deg)}
+.face{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:14px;border:1px solid rgba(217,180,106,.55);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem;
+  padding:1rem;text-align:center;
+}
+.back{
+  background:
+    radial-gradient(circle at 50% 50%,rgba(217,180,106,.14),transparent 55%),
+    repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0 2px,transparent 2px 10px),
+    linear-gradient(160deg,#241240,#0c0716);
+  box-shadow:0 10px 30px rgba(0,0,0,.6),inset 0 0 0 6px #0c0716,inset 0 0 0 7px rgba(217,180,106,.35);
+}
+.back .sigil{font-size:2.6rem;color:var(--gold);filter:drop-shadow(0 0 12px rgba(217,180,106,.6))}
+.back .q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;opacity:.8}
+.card:not(.flipped):hover .card-inner,.card:not(.flipped):focus-visible .card-inner{transform:translateY(-6px) rotateZ(-1.5deg)}
+.card:focus-visible{outline:2px solid var(--gold);outline-offset:4px;border-radius:14px}
+.front{
+  transform:rotateY(180deg);
+  background:linear-gradient(160deg,#2b1250,#12081f);
+  box-shadow:0 0 28px rgba(107,63,160,.5);
+}
+.front .icon{font-size:2.4rem}
+.front .name{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic}
+.front .again{font-size:.8rem;opacity:.6}
+.card.locked{opacity:.35;cursor:not-allowed;filter:grayscale(.6)}
+.card.final .back{border-color:var(--crimson);box-shadow:0 0 30px rgba(163,18,43,.4),inset 0 0 0 6px #0c0716,inset 0 0 0 7px rgba(163,18,43,.6)}
+.card.final.ready .back{animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 50px rgba(163,18,43,.8),inset 0 0 0 6px #0c0716,inset 0 0 0 7px rgba(163,18,43,.9)}}
+
+/* Stage */
+.stage{position:fixed;inset:0;z-index:20;background:var(--ink);overflow:hidden;animation:stagein .6s ease both}
+@keyframes stagein{from{opacity:0}to{opacity:1}}
+#stage-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stage-overlay{position:absolute;inset:0;pointer-events:none}
+.stage-text{
+  position:absolute;left:0;right:0;bottom:0;text-align:center;
+  padding:3rem 1.5rem calc(2rem + var(--safe-b));
+  background:linear-gradient(transparent,rgba(5,3,9,.88) 55%);
+  pointer-events:none;
+}
+.stage-text h3{font-size:clamp(1.8rem,6vw,2.6rem);font-style:italic;margin-bottom:.5rem}
+.stage-text p{max-width:46ch;margin:0 auto;line-height:1.65;font-size:1.05rem}
+.stage-text .hint{margin-top:.8rem;font-size:.85rem;color:var(--gold);opacity:.85}
+.close,.mute{
+  position:absolute;top:calc(1rem + var(--safe-t));z-index:5;
+  font:400 .9rem 'Jost',sans-serif;color:var(--bone);
+  background:rgba(7,5,11,.55);border:1px solid rgba(217,180,106,.5);
+  border-radius:999px;padding:.5rem 1.1rem;cursor:pointer;backdrop-filter:blur(6px);
+}
+.close{left:1rem}.mute{right:1rem}
+.close:hover,.mute:hover{background:var(--gold);color:var(--ink)}
+
+/* Overlays used by scenes */
+.glow-edge{position:absolute;inset:0;box-shadow:inset 0 0 120px 10px rgba(163,18,43,.55);animation:edge 3s ease-in-out infinite}
+@keyframes edge{50%{box-shadow:inset 0 0 180px 30px rgba(163,18,43,.8)}}
+.big-word{
+  position:absolute;left:0;right:0;top:36%;text-align:center;
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(3rem,16vw,8rem);
+  color:var(--bone);opacity:0;animation:fadeword 3s 1.6s ease forwards;
+}
+@keyframes fadeword{to{opacity:.95;text-shadow:0 0 40px rgba(217,180,106,.5)}}
+
+/* Vinyl */
+.player{position:absolute;left:0;right:0;top:calc(4.5rem + var(--safe-t));display:flex;flex-direction:column;align-items:center;gap:1rem;pointer-events:auto}
+.vinyl{
+  width:min(62vw,300px);aspect-ratio:1;border-radius:50%;
+  background:
+    radial-gradient(circle,var(--crimson) 0 17%,#111 18% 20%,transparent 21%),
+    repeating-radial-gradient(circle,#0b0b0e 0 3px,#17151c 3px 5px);
+  box-shadow:0 0 50px rgba(107,63,160,.6),0 0 0 6px #0a0810;
+  animation:spin 6s linear infinite;animation-play-state:paused;
+}
+.vinyl.playing{animation-play-state:running}
+@keyframes spin{to{transform:rotate(360deg)}}
+.track{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem}
+.seek{width:min(70vw,320px);height:4px;background:rgba(255,255,255,.18);border-radius:4px;overflow:hidden}
+.seek i{display:block;height:100%;width:0;background:var(--gold)}
+.playbtn{pointer-events:auto}
+.lyric{min-height:2.6em;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--gold);text-align:center;padding:0 1.5rem;transition:opacity .6s}
+
+/* Alice card */
+.scan{position:absolute;inset:0;background:repeating-linear-gradient(transparent 0 3px,rgba(0,0,0,.35) 3px 4px);mix-blend-mode:multiply}
+.alice-title{
+  position:absolute;left:0;right:0;top:28%;text-align:center;
+  font:500 clamp(2.4rem,13vw,5.5rem) 'Jost',sans-serif;letter-spacing:.18em;color:var(--bone);
+  text-shadow:2px 0 var(--crimson),-2px 0 #2fd0ff;animation:glitch 3.2s infinite;
+}
+@keyframes glitch{
+  0%,90%,100%{transform:none;opacity:1}
+  92%{transform:translateX(-6px) skewX(8deg);opacity:.7}
+  94%{transform:translateX(6px);opacity:1}
+  96%{transform:translateX(-3px) skewX(-6deg)}
+}
+
+/* Secret */
+.moon{
+  position:fixed;top:calc(1rem + var(--safe-t));right:1.2rem;z-index:15;
+  width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;
+  background:radial-gradient(circle at 35% 35%,#fff8e6,#cfc3a0 60%,#8d8466);
+  box-shadow:0 0 22px rgba(255,248,230,.55);opacity:.8;
+  animation:moonfloat 6s ease-in-out infinite;
+}
+@keyframes moonfloat{50%{transform:translateY(5px)}}
+.secret{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.secret-box{max-width:420px;text-align:center;padding:2rem;border:1px solid var(--gold);border-radius:14px;background:#120a20;display:flex;flex-direction:column;gap:1.4rem;line-height:1.7;box-shadow:0 0 60px rgba(107,63,160,.5)}
+.secret-box p{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-style:italic}
+
+/* Final */
+.final-name{
+  position:absolute;left:0;right:0;top:30%;text-align:center;
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(3.5rem,18vw,9rem);line-height:1;
+  color:var(--bone);text-shadow:0 0 30px var(--gold),0 0 80px var(--crimson);
+  animation:namein 3s ease both;
+}
+@keyframes namein{from{opacity:0;letter-spacing:.4em;filter:blur(12px)}to{opacity:1;letter-spacing:.02em;filter:blur(0)}}
+.count{position:absolute;left:0;right:0;top:calc(30% + 11rem);text-align:center;color:var(--gold);font-size:1.1rem;opacity:0;animation:fadeword 2s 3s ease forwards}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
+/* Black card */
+.black-word{
+  position:absolute;left:0;right:0;top:30%;text-align:center;
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;
+  font-size:clamp(4rem,22vw,10rem);line-height:1;
+  background:linear-gradient(100deg,#efe6d8 0%,#d9b46a 20%,#c8507e 40%,#7a5ad0 60%,#2fa3b5 80%,#efe6d8 100%);
+  background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  opacity:0;animation:blackin 3s 1s ease forwards,shimmer 10s linear infinite;
+}
+@keyframes blackin{to{opacity:1}}
+@keyframes shimmer{to{background-position:300% 0}}
+
+/* Cheesecake sweetness meter */
+.sweet{position:absolute;left:0;right:0;top:calc(4.2rem + var(--safe-t));display:flex;align-items:center;justify-content:center;gap:.8rem;font-size:.9rem;color:var(--gold)}
+.sweet-bar{width:min(40vw,180px);height:6px;border-radius:6px;background:rgba(255,255,255,.15);overflow:hidden}
+.sweet-bar i{display:block;height:100%;width:12%;background:linear-gradient(90deg,#d9b46a,#ff6f91);transition:width .6s ease}
+
+/* card labels */
+.back .q{font-size:1.2rem;line-height:1.35}
+.back .q b{display:block;font-size:1.6rem;font-weight:600;color:var(--gold);margin-top:.15rem}
+.back .sigil{font-size:2.8rem;filter:drop-shadow(0 0 14px rgba(217,180,106,.55))}
+.front .qsmall{font-size:.85rem;opacity:.65;font-style:italic;font-family:'Cormorant Garamond',serif}
